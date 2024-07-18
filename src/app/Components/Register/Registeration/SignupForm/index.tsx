@@ -1,31 +1,62 @@
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useRef, useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import Image from "next/image";
+import { IoMdEyeOff } from "react-icons/io";
+import { IoEye } from "react-icons/io5";
 
-const SubmitFormSchema = z.object({
+const SignupFormSchema = z.object({
     username: z.string().min(3),
     email: z.string().email(),
     password: z.string().min(8),
+    comfirmPassword: z.string().min(8),
+    avatar: z.string(),
 });
 
-type FormType = z.infer<typeof SubmitFormSchema>;
+type SignupFormType = z.infer<typeof SignupFormSchema>;
 
 function SignupForm({
     setIsLoginForm,
 }: {
     setIsLoginForm: Dispatch<SetStateAction<boolean>>;
 }) {
-    const { register, handleSubmit, formState } = useForm<FormType>({
-        resolver: zodResolver(SubmitFormSchema),
-    });
+    const { register, handleSubmit, formState, setValue } =
+        useForm<SignupFormType>({
+            resolver: zodResolver(SignupFormSchema),
+        });
 
     const { errors } = formState;
-    console.log(errors);
 
-    const onSubmit: SubmitHandler<FormType> = (data) => {
-        console.log(data);
+    const onSubmit: SubmitHandler<SignupFormType> = (data) => {};
+
+    const [avatar, setAvatar] = useState<string>("");
+
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (file) {
+            const objectUrl = URL.createObjectURL(file);
+            setAvatar(objectUrl);
+        }
     };
+
+    const [passwordInputStatus, setPasswordInputStatus] = useState<{
+        isPasswordShown: boolean;
+        type: "password" | "text";
+    }>({
+        isPasswordShown: false,
+        type: "password",
+    });
+    const [confirmPasswordInputStatus, setConfirmPasswordInputStatus] =
+        useState<{
+            isPasswordShown: boolean;
+            type: "password" | "text";
+        }>({
+            isPasswordShown: false,
+            type: "password",
+        });
+
+    const PasswordInput = useRef<HTMLInputElement | null>(null);
 
     return (
         <form
@@ -64,9 +95,9 @@ function SignupForm({
                         {errors.email?.message}
                     </p>
                 </label>
-                <label htmlFor="password" className="grid pb-[2vh]">
+                <label htmlFor="password" className="grid relative">
                     <input
-                        type="password"
+                        type={passwordInputStatus.type}
                         id="password"
                         placeholder="Enter password ..."
                         className="input w-full "
@@ -75,8 +106,95 @@ function SignupForm({
                     <p className="text-error text-sm font-mono ">
                         {errors.password?.message}
                     </p>
+                    <button
+                        type="button"
+                        className={
+                            "absolute top-1/2 right-0 -translate-y-1/2 -translate-x-1/2"
+                        }
+                        onClick={() => {
+                            if (!passwordInputStatus.isPasswordShown) {
+                                setPasswordInputStatus({
+                                    isPasswordShown: true,
+                                    type: "text",
+                                });
+                            } else {
+                                setPasswordInputStatus({
+                                    isPasswordShown: false,
+                                    type: "password",
+                                });
+                            }
+                        }}
+                    >
+                        {passwordInputStatus.isPasswordShown ? (
+                            <IoMdEyeOff />
+                        ) : (
+                            <IoEye />
+                        )}
+                    </button>
                 </label>
-
+                <label
+                    htmlFor="comfirmPassword"
+                    className="grid relative py-[2vh]"
+                >
+                    <input
+                        type={confirmPasswordInputStatus.type}
+                        id="comfirmPassword"
+                        placeholder="Confirm password ..."
+                        className="input w-full "
+                        {...register("comfirmPassword")}
+                    />
+                    <p className="text-error text-sm font-mono ">
+                        {errors.comfirmPassword?.message}
+                    </p>
+                    <button
+                        type="button"
+                        className={
+                            "absolute top-1/2 right-0 -translate-y-1/2 -translate-x-1/2"
+                        }
+                        onClick={() => {
+                            if (!confirmPasswordInputStatus.isPasswordShown) {
+                                setConfirmPasswordInputStatus({
+                                    isPasswordShown: true,
+                                    type: "text",
+                                });
+                            } else {
+                                setConfirmPasswordInputStatus({
+                                    isPasswordShown: false,
+                                    type: "password",
+                                });
+                            }
+                        }}
+                    >
+                        {confirmPasswordInputStatus.isPasswordShown ? (
+                            <IoMdEyeOff />
+                        ) : (
+                            <IoEye />
+                        )}
+                    </button>
+                </label>
+                <label
+                    htmlFor="avatar"
+                    className="grid grid-cols-[0.2fr,0.8fr] pb-[2vh] items-center "
+                >
+                    <figure className="relative aspect-square rounded-full overflow-hidden border border-base-content">
+                        <Image
+                            src={avatar || "/wallpaper.jfif"}
+                            fill
+                            alt="avatar"
+                            className="object-cover"
+                        />
+                    </figure>
+                    <span className=" text-primary underline underline-offset-2 justify-self-end font-semibold text-lg">
+                        Upload Avatar
+                    </span>
+                    <input
+                        type="file"
+                        name="avatar"
+                        id="avatar"
+                        className="hidden"
+                        onChange={handleFileChange}
+                    />
+                </label>
                 <button
                     type="submit"
                     className="btn btn-info rounded-md w-full"

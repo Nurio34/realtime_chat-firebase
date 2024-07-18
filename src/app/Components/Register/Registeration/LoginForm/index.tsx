@@ -1,15 +1,33 @@
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Dispatch, SetStateAction } from "react";
-import { useForm } from "react-hook-form";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { z } from "zod";
+
+const LoginFormSchema = z.object({
+    email: z.string().email(),
+    password: z.string().min(8),
+});
+
+type LoginFormType = z.infer<typeof LoginFormSchema>;
 
 function LoginForm({
     setIsLoginForm,
 }: {
     setIsLoginForm: Dispatch<SetStateAction<boolean>>;
 }) {
-    const { register } = useForm();
+    const { register, handleSubmit, formState } = useForm<LoginFormType>({
+        resolver: zodResolver(LoginFormSchema),
+    });
+
+    const { errors } = formState;
+
+    const onSubmit: SubmitHandler<LoginFormType> = (data) => {};
 
     return (
-        <form className="  w-2/3 aspect-[9/10] m-auto">
+        <form
+            className="  w-2/3 aspect-[9/10] m-auto"
+            onSubmit={handleSubmit(onSubmit)}
+        >
             <fieldset
                 className="space-y-[2vh] shadow-md shadow-base-content  py-[2vh] px-[2vw] rounded-xl
                 bg-[rgba(0,0,0,0.3)]
@@ -26,6 +44,9 @@ function LoginForm({
                         className="input w-full"
                         {...register("email")}
                     />
+                    <p className="text-error text-sm font-mono ">
+                        {errors.email?.message}
+                    </p>
                 </label>
                 <label htmlFor="password" className="grid pb-[2vh]">
                     <input
@@ -35,6 +56,9 @@ function LoginForm({
                         className="input w-full "
                         {...register("password")}
                     />
+                    <p className="text-error text-sm font-mono ">
+                        {errors.password?.message}
+                    </p>
                 </label>
 
                 <button
