@@ -1,0 +1,18 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+    background-image: url("/wallpaper.jfif");
+    background-size: cover;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+main {
+    background-color: rgba(0, 0, 0, 0.7);
+    border-radius: 5vh;
+    backdrop-filter: blur(20px) hue-rotate(15deg);
+}
