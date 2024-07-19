@@ -1,4 +1,7 @@
+import { useGlobalContext } from "@/app/GlobalContextProvider";
+import { auth } from "@/app/lib/firebase";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { signInWithEmailAndPassword } from "firebase/auth";
 import { Dispatch, SetStateAction } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
@@ -21,7 +24,21 @@ function LoginForm({
 
     const { errors } = formState;
 
-    const onSubmit: SubmitHandler<LoginFormType> = (data) => {};
+    const { setUser } = useGlobalContext();
+
+    const onSubmit: SubmitHandler<LoginFormType> = (data) => {
+        signInWithEmailAndPassword(auth, data.email, data.password)
+            .then((userCredential) => {
+                // Signed in
+                const user = userCredential.user;
+                setUser(JSON.parse(JSON.stringify(user)));
+                // ...
+            })
+            .catch((error) => {
+                const errorCode = error.code;
+                const errorMessage = error.message;
+            });
+    };
 
     return (
         <form

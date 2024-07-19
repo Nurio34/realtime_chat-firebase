@@ -5,14 +5,22 @@ import { z } from "zod";
 import Image from "next/image";
 import { IoMdEyeOff } from "react-icons/io";
 import { IoEye } from "react-icons/io5";
+import { auth } from "@/app/lib/firebase";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { useGlobalContext } from "@/app/GlobalContextProvider";
 
-const SignupFormSchema = z.object({
-    username: z.string().min(3),
-    email: z.string().email(),
-    password: z.string().min(8),
-    comfirmPassword: z.string().min(8),
-    avatar: z.string(),
-});
+const SignupFormSchema = z
+    .object({
+        username: z.string().min(3),
+        email: z.string().email(),
+        password: z.string().min(8),
+        confirmPassword: z.string().min(8),
+        avatar: z.string(),
+    })
+    .refine((data) => data.password === data.confirmPassword, {
+        message: "Passwords don't match",
+        path: ["confirmPassword"],
+    });
 
 type SignupFormType = z.infer<typeof SignupFormSchema>;
 
@@ -28,7 +36,22 @@ function SignupForm({
 
     const { errors } = formState;
 
-    const onSubmit: SubmitHandler<SignupFormType> = (data) => {};
+    const { setUser } = useGlobalContext();
+
+    const onSubmit: SubmitHandler<SignupFormType> = (data) => {
+        createUserWithEmailAndPassword(auth, data.email, data.password)
+            .then((userCredential) => {
+                // Signed up
+                const user = userCredential.user;
+                setUser(JSON.parse(JSON.stringify(user)));
+                // ...
+            })
+            .catch((error) => {
+                const errorCode = error.code;
+                const errorMessage = error.message;
+                // ..
+            });
+    };
 
     const [avatar, setAvatar] = useState<string>("");
 
@@ -37,6 +60,7 @@ function SignupForm({
         if (file) {
             const objectUrl = URL.createObjectURL(file);
             setAvatar(objectUrl);
+            setValue("avatar", file.name);
         }
     };
 
@@ -141,10 +165,10 @@ function SignupForm({
                         id="comfirmPassword"
                         placeholder="Confirm password ..."
                         className="input w-full "
-                        {...register("comfirmPassword")}
+                        {...register("confirmPassword")}
                     />
                     <p className="text-error text-sm font-mono ">
-                        {errors.comfirmPassword?.message}
+                        {errors.confirmPassword?.message}
                     </p>
                     <button
                         type="button"
@@ -176,7 +200,7 @@ function SignupForm({
                     htmlFor="avatar"
                     className="grid grid-cols-[0.2fr,0.8fr] pb-[2vh] items-center "
                 >
-                    <figure className="relative aspect-square rounded-full overflow-hidden border border-base-content">
+                    <figure className="relative aspect-square rounded-full overflow-hidden border border-base-content cursor-pointer">
                         <Image
                             src={avatar || "/wallpaper.jfif"}
                             fill
@@ -184,7 +208,8 @@ function SignupForm({
                             className="object-cover"
                         />
                     </figure>
-                    <span className=" text-primary underline underline-offset-2 justify-self-end font-semibold text-lg">
+                    <span className=" text-primary underline underline-offset-2 justify-self-end font-semibold text-lg cursor-pointer">
+                        {" "}
                         Upload Avatar
                     </span>
                     <input
