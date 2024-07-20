@@ -86,7 +86,7 @@ function LoginForm({
                 </button>
 
                 <div className="flex gap-x-1">
-                    <p>You don't have an account ?</p>
+                    <p>You don&apos;t have an account ?</p>
                     <button
                         type="button"
                         className="text-primary underline-offset-2"
