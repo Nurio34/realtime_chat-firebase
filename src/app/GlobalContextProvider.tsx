@@ -49,7 +49,6 @@ export const useGlobalContext = () => {
     const context = useContext(GlobalContext);
 
     if (!context) {
-        console.log("Error with 'GlobalContext'");
         throw new Error("Error with 'GlobalContext'");
     }
 

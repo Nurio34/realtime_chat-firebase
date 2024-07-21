@@ -29,7 +29,6 @@ function LoginForm({
         try {
             await signInWithEmailAndPassword(auth, email, password);
         } catch (error) {
-            console.log(error);
             throw new Error(JSON.stringify(error));
         }
     };

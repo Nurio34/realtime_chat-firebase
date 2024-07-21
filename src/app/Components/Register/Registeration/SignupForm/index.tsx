@@ -94,7 +94,6 @@ function SignupForm({
                 chats: [],
             });
         } catch (error) {
-            console.log(error);
             toast.error(JSON.stringify(error));
             throw new Error(JSON.stringify(error));
         }

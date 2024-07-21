@@ -20,7 +20,7 @@ function Actions() {
             className="relative border-y-2 border-base-content  max-h-full overflow-hidden"
         >
             <div
-                className="absolute top-0 left-0 w-full overflow-y-scroll"
+                className="absolute top-0 left-0 w-full overflow-y-auto"
                 style={{ height: divHeight, maxHeight: divHeight }}
             >
                 <ChatSettings />
