@@ -9,7 +9,7 @@ function Hero() {
         >
             <figure className="relative aspect-[16/11] rounded-md overflow-hidden">
                 <Image
-                    src="/hero.jfif"
+                    src="/hero.webp"
                     fill
                     alt="hero image"
                     style={{ objectFit: "cover" }}
@@ -17,7 +17,7 @@ function Hero() {
             </figure>
             <div className="space-y-[1vh]">
                 <h1
-                    className=" font-bold text-5xl bg-gradient-to-br from-primary via-accent to-secondary bg-clip-text text-transparent"
+                    className=" font-bold text-6xl bg-gradient-to-br from-primary via-accent to-secondary bg-clip-text text-transparent"
                     style={{ lineHeight: 1.2 }}
                 >
                     Connect Instantly. Collaborate Seamlessly.

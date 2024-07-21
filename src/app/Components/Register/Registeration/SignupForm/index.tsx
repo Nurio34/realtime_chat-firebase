@@ -5,9 +5,12 @@ import { z } from "zod";
 import Image from "next/image";
 import { IoMdEyeOff } from "react-icons/io";
 import { IoEye } from "react-icons/io5";
-import { auth } from "@/app/lib/firebase";
-import { createUserWithEmailAndPassword } from "firebase/auth";
 import { useGlobalContext } from "@/app/GlobalContextProvider";
+import toast from "react-hot-toast";
+import { auth, db } from "@/app/lib/firebase";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { doc, setDoc } from "firebase/firestore";
+import uploadAvatar from "@/app/lib/uploadAvatar";
 
 const SignupFormSchema = z
     .object({
@@ -15,7 +18,7 @@ const SignupFormSchema = z
         email: z.string().email(),
         password: z.string().min(8),
         confirmPassword: z.string().min(8),
-        avatar: z.string(),
+        avatar: z.string({ message: "Avatar picture is required" }),
     })
     .refine((data) => data.password === data.confirmPassword, {
         message: "Passwords don't match",
@@ -34,32 +37,17 @@ function SignupForm({
             resolver: zodResolver(SignupFormSchema),
         });
 
-    const { errors } = formState;
-
-    const { setUser } = useGlobalContext();
-
-    const onSubmit: SubmitHandler<SignupFormType> = (data) => {
-        createUserWithEmailAndPassword(auth, data.email, data.password)
-            .then((userCredential) => {
-                // Signed up
-                const user = userCredential.user;
-                setUser(JSON.parse(JSON.stringify(user)));
-                // ...
-            })
-            .catch((error) => {
-                const errorCode = error.code;
-                const errorMessage = error.message;
-                // ..
-            });
-    };
+    const { errors, isSubmitting } = formState;
 
     const [avatar, setAvatar] = useState<string>("");
+    const [avatarFile, setAvatarFile] = useState<File | null>(null);
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (file) {
             const objectUrl = URL.createObjectURL(file);
             setAvatar(objectUrl);
+            setAvatarFile(file);
             setValue("avatar", file.name);
         }
     };
@@ -80,7 +68,37 @@ function SignupForm({
             type: "password",
         });
 
-    const PasswordInput = useRef<HTMLInputElement | null>(null);
+    const onSubmit: SubmitHandler<SignupFormType> = async (data) => {
+        const { email, password, username } = data;
+
+        try {
+            const res = await createUserWithEmailAndPassword(
+                auth,
+                email,
+                password,
+            );
+
+            const avatarUrl = await uploadAvatar(avatarFile!);
+
+            await setDoc(doc(db, "users", res.user.uid), {
+                userId: res.user.uid,
+                username,
+                email,
+                password,
+                blocks: [],
+                avatar: avatarUrl,
+            });
+            toast.success("Account Created Successfully");
+
+            await setDoc(doc(db, "chats", res.user.uid), {
+                chats: [],
+            });
+        } catch (error) {
+            console.log(error);
+            toast.error(JSON.stringify(error));
+            throw new Error(JSON.stringify(error));
+        }
+    };
 
     return (
         <form
@@ -219,14 +237,17 @@ function SignupForm({
                         className="hidden"
                         onChange={handleFileChange}
                     />
+                    <p className="text-error text-sm font-mono col-start-1 col-span-full ">
+                        {errors.avatar?.message}
+                    </p>
                 </label>
                 <button
                     type="submit"
-                    className="btn btn-info rounded-md w-full"
+                    className={`btn btn-info rounded-md w-full disabled:btn-neutral disabled:border disabled:border-base-content`}
+                    disabled={isSubmitting}
                 >
-                    Signup
+                    {isSubmitting ? "Signing..." : "Signup"}
                 </button>
-
                 <div className="flex gap-x-1">
                     <p>Already have an account ?</p>
                     <button

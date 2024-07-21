@@ -1,5 +1,6 @@
 "use client";
 
+import { User } from "firebase/auth";
 import React, {
     createContext,
     Dispatch,
@@ -8,9 +9,24 @@ import React, {
     useState,
 } from "react";
 
+export type UserType = {
+    userId: string;
+    username: string;
+    email: string;
+    password: string;
+    blocks: string[];
+    avatar: string;
+};
+
+type UserStateType = {
+    user: UserType;
+    isLoading: boolean;
+    error: string;
+};
+
 type ContextType = {
-    user: any;
-    setUser: Dispatch<SetStateAction<any>>;
+    userState: UserStateType;
+    setUserState: Dispatch<SetStateAction<UserStateType>>;
 };
 
 const GlobalContext = createContext<ContextType | null>(null);
@@ -20,9 +36,10 @@ type Props = {
 };
 
 function GlobalContextProvider({ children }: Props) {
-    const [user, setUser] = useState<any>({});
+    const [userState, setUserState] = useState({} as UserStateType);
+
     return (
-        <GlobalContext.Provider value={{ user, setUser }}>
+        <GlobalContext.Provider value={{ userState, setUserState }}>
             {children}
         </GlobalContext.Provider>
     );

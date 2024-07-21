@@ -1,4 +1,3 @@
-import { motion } from "framer-motion";
 import Header from "./Header";
 import List from "./List";
 import Search from "./Search";

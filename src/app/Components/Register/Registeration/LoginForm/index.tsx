@@ -22,22 +22,16 @@ function LoginForm({
         resolver: zodResolver(LoginFormSchema),
     });
 
-    const { errors } = formState;
+    const { errors, isSubmitting, isSubmitSuccessful } = formState;
 
-    const { setUser } = useGlobalContext();
-
-    const onSubmit: SubmitHandler<LoginFormType> = (data) => {
-        signInWithEmailAndPassword(auth, data.email, data.password)
-            .then((userCredential) => {
-                // Signed in
-                const user = userCredential.user;
-                setUser(JSON.parse(JSON.stringify(user)));
-                // ...
-            })
-            .catch((error) => {
-                const errorCode = error.code;
-                const errorMessage = error.message;
-            });
+    const onSubmit: SubmitHandler<LoginFormType> = async (data) => {
+        const { email, password } = data;
+        try {
+            await signInWithEmailAndPassword(auth, email, password);
+        } catch (error) {
+            console.log(error);
+            throw new Error(JSON.stringify(error));
+        }
     };
 
     return (
@@ -80,9 +74,16 @@ function LoginForm({
 
                 <button
                     type="submit"
-                    className="btn btn-info rounded-md w-full"
+                    className={`btn btn-info rounded-md w-full disabled:btn-neutral disabled:border disabled:border-base-content ${
+                        isSubmitSuccessful ? "btn-success" : ""
+                    }`}
+                    disabled={isSubmitting}
                 >
-                    Login
+                    {isSubmitting
+                        ? "Logging..."
+                        : isSubmitSuccessful
+                        ? "Login Success"
+                        : "Login"}
                 </button>
 
                 <div className="flex gap-x-1">
