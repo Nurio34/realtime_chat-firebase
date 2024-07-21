@@ -22,6 +22,7 @@ function Search() {
                 </div>
                 <button
                     type="button"
+                    aria-label="open search"
                     className="bg-[rgba(255,255,255,0.3)] rounded-md"
                     onClick={() => setIsSearchOpen((pre) => !pre)}
                 >

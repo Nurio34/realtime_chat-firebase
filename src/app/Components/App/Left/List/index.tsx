@@ -45,7 +45,7 @@ function List() {
                             className="grid grid-cols-[1fr,4fr] items-center gap-[1vw] border-b border-base-content py-[2vh]"
                         >
                             <figure className="relative aspect-square rounded-full overflow-hidden">
-                                <Image src={"/wallpaper.jfif"} fill alt="img" />
+                                <Image src={"/wallpaper.webp"} fill alt="img" />
                             </figure>
                             <div>
                                 <p>John Doe</p>
