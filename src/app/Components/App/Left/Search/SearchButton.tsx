@@ -1,9 +1,12 @@
 import React from "react";
+import { useFormStatus } from "react-dom";
 
 function SearchButton() {
+    const { pending } = useFormStatus();
+
     return (
         <button type="submit" className="btn btn-sm join-item btn-primary">
-            Search
+            {pending ? "Searching..." : "Search"}
         </button>
     );
 }

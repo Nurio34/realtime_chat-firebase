@@ -90,7 +90,7 @@ function SignupForm({
             });
             toast.success("Account Created Successfully");
 
-            await setDoc(doc(db, "chats", res.user.uid), {
+            await setDoc(doc(db, "chatsList", res.user.uid), {
                 chats: [],
             });
         } catch (error) {

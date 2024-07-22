@@ -1,7 +1,16 @@
+import { useGlobalContext } from "@/app/GlobalContextProvider";
+
 function Block() {
+    const { chatState } = useGlobalContext();
+
     return (
-        <button type="button" className="btn btn-error rounded-md">
-            Block
+        <button
+            type="button"
+            className={`btn rounded-md ${
+                chatState.isBlocked ? "btn-success" : "btn-error"
+            }`}
+        >
+            {chatState.isBlocked ? "Unblock" : "Block"}
         </button>
     );
 }
