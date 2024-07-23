@@ -56,6 +56,7 @@ export default function Home() {
         };
 
         const handlePopSate = (e: PopStateEvent) => {
+            e.preventDefault();
             setOpenSection("left");
         };
 
