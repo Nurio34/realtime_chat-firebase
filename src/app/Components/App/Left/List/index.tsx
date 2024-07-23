@@ -67,7 +67,7 @@ function List() {
             FirstChatButton.current.click();
             setIsClicked(true);
         }
-    }, [chats]);
+    }, [chats, isClicked]);
 
     return (
         <div ref={Div} className="relative max-h-full  overflow-hidden ">

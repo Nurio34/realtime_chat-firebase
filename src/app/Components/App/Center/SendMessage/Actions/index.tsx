@@ -5,7 +5,7 @@ import { FaMicrophone } from "react-icons/fa";
 import { MdOutlinePhotoCamera } from "react-icons/md";
 import { RiGalleryFill } from "react-icons/ri";
 
-function index() {
+function Actions() {
     const { isBlocked, setImageState } = useGlobalContext();
     const ImageFile = useRef<HTMLInputElement | null>(null);
 
@@ -51,4 +51,4 @@ function index() {
     );
 }
 
-export default index;
+export default Actions;

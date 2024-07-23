@@ -32,7 +32,7 @@ function App() {
         );
 
         return () => unSub();
-    }, [setUserState]);
+    }, [setUserState, userState.user.userId]);
 
     return (
         <main

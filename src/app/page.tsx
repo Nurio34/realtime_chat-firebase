@@ -50,7 +50,7 @@ export default function Home() {
         });
 
         return () => unSub();
-    }, [auth, db, setUserState]);
+    }, [setUserState]);
 
     const isAuthed = Boolean(userState?.user?.userId);
 
