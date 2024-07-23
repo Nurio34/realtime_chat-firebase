@@ -1,5 +1,6 @@
 import { useGlobalContext } from "@/app/GlobalContextProvider";
 import Image from "next/image";
+import GoBackButton from "../../_Components/GoBackButton";
 
 function Header() {
     const { chatState } = useGlobalContext();
@@ -34,6 +35,7 @@ function Header() {
                     ? "There is block between users"
                     : "Greatful for every sunrise"}
             </p>
+            <GoBackButton />
         </div>
     );
 }

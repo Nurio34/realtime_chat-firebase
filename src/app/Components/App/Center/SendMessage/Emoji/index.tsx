@@ -13,7 +13,7 @@ function Emoji() {
     } = useGlobalContext();
 
     return (
-        <div className={`${isSmallScreen ? "" : "relative"}`}>
+        <div className={`z-10 ${isSmallScreen ? "" : "relative"}`}>
             <button
                 type="button"
                 onClick={() => setIsOpen(true)}
@@ -23,7 +23,7 @@ function Emoji() {
             </button>
             {isOpen && (
                 <div
-                    className={`absolute bottom-0 right-0 ${
+                    className={`absolute  bottom-0 right-0 ${
                         isSmallScreen
                             ? "translate-x-[16vw] -translate-y-[8vh]"
                             : ""
@@ -41,10 +41,10 @@ function Emoji() {
                     />
                     <button
                         type="button"
-                        className="absolute top-0 left-0 -translate-y-1/2 -translate-x-1/2 btn btn-sm btn-circle"
+                        className="absolute z-10 bottom-0 right-0 -translate-y-1/2 -translate-x-1/2 btn btn-sm bg-error"
                         onClick={() => setIsOpen(false)}
                     >
-                        x
+                        Close
                     </button>
                 </div>
             )}

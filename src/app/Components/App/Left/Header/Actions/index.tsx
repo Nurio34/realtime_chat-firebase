@@ -3,11 +3,20 @@ import { BsPencilSquare, BsThreeDots } from "react-icons/bs";
 import { FaVideo } from "react-icons/fa";
 
 function Actions() {
-    const { isBlocked } = useGlobalContext();
+    const { isBlocked, isSmallScreen, setOpenSection } = useGlobalContext();
 
     return (
-        <div className="flex gap-[1vw] items-center">
-            <button type="button" aria-label="settings" disabled={isBlocked}>
+        <div
+            className={`flex gap-[1vw] items-center ${
+                isSmallScreen ? "justify-between" : ""
+            }`}
+        >
+            <button
+                type="button"
+                aria-label="settings"
+                disabled={isBlocked}
+                onClick={() => setOpenSection("right")}
+            >
                 <BsThreeDots />
             </button>
             <button type="button" aria-label="video" disabled={isBlocked}>
