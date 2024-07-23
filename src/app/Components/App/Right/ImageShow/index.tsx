@@ -13,6 +13,7 @@ function ImageShow() {
                         fill
                         alt="image"
                         className="object-contain"
+                        sizes="(min-width:768px) 20vw, 10vw"
                     />
                 </figure>
             )}{" "}

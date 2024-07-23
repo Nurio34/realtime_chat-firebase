@@ -10,7 +10,12 @@ function Header() {
     return (
         <div className="grid grid-cols-[1fr,2fr,2fr] gap-[1vw] items-center justify-between">
             <figure className="relative aspect-square rounded-full overflow-hidden">
-                <Image src={avatar} fill alt="img" />
+                <Image
+                    src={avatar}
+                    fill
+                    alt="img"
+                    sizes="(min-width:768px) 20vw, 10vw"
+                />
             </figure>
             <p className="capitalize">{username}</p>
             <Actions />

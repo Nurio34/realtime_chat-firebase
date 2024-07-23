@@ -10,9 +10,14 @@ function Header() {
         <div className="grid grid-cols-[0.1fr,1fr,auto] gap-x-[1vw] items-center">
             <figure className="relative aspect-square rounded-full overflow-hidden">
                 <Image
-                    src={isBlocked ? "/block.webp" : chatState?.user?.avatar}
+                    src={
+                        isBlocked
+                            ? "/block.webp"
+                            : chatState?.user?.avatar || "/her.webp"
+                    }
                     fill
                     alt="img"
+                    sizes="(min-width:768px) 20vw, 10vw"
                 />
             </figure>
             <div>

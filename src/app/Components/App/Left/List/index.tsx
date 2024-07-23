@@ -157,6 +157,7 @@ function List() {
                                         src={chat?.user?.avatar}
                                         fill
                                         alt={`avatar of ${chat?.user?.username}`}
+                                        sizes="(min-width:768px) 20vw, 10vw"
                                     />
                                 </figure>
                                 <div>

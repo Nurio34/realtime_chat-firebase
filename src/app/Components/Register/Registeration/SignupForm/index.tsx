@@ -223,6 +223,7 @@ function SignupForm({
                             fill
                             alt="avatar"
                             className="object-cover"
+                            sizes="(min-width:768px) 20vw, 10vw"
                         />
                     </figure>
                     <span className=" text-primary underline underline-offset-2 justify-self-end font-semibold text-lg cursor-pointer">

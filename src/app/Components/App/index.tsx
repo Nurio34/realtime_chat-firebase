@@ -2,7 +2,7 @@ import Left from "./Left";
 import Center from "./Center";
 import Right from "./Right";
 import { useEffect, useState } from "react";
-import { lightThemes } from "@/app/utils/daisyui_lightThemes";
+import { lightThemes } from "@/app/utilities/daisyui_lightThemes";
 import { doc, onSnapshot } from "firebase/firestore";
 import { db } from "@/app/lib/firebase";
 import { useGlobalContext, UserType } from "@/app/GlobalContextProvider";

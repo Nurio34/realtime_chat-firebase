@@ -96,6 +96,7 @@ function Messages() {
                                                 ? userState.user.username
                                                 : chatState.user.username
                                         }`}
+                                        sizes="(min-width:768px) 20vw, 10vw"
                                     />
                                 </figure>
                             ) : (
@@ -121,6 +122,7 @@ function Messages() {
                                             fill
                                             alt="image"
                                             className="object-contain"
+                                            sizes="(min-width:768px) 33vw, 15vw"
                                         />
                                     </figure>
                                 )}

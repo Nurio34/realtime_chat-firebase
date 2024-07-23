@@ -13,7 +13,7 @@ function Hero() {
                     fill
                     alt="hero image"
                     style={{ objectFit: "cover" }}
-                    sizes="(min-width : 1200px) 50vw, 33vw"
+                    sizes="(min-width:768px) 20vw, 10vw"
                 />
             </figure>
             <div className="space-y-[1vh]">

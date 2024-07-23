@@ -133,6 +133,7 @@ function Search() {
                                         src={user?.avatar}
                                         fill
                                         alt={`avatar of ${user.username}`}
+                                        sizes="(min-width:768px) 20vw, 10vw"
                                     />
                                 </figure>
                                 <p className="capitalize">{user.username}</p>

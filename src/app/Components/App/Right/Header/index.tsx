@@ -15,6 +15,7 @@ function Header() {
                             ? "Block Image"
                             : `avatar of ${chatState?.user?.username}`
                     }
+                    sizes="(min-width:768px) 20vw, 10vw"
                 />
             </figure>
             <p className="capitalize">
