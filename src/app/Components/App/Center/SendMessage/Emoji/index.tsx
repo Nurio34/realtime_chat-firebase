@@ -4,11 +4,16 @@ import { useState } from "react";
 
 function Emoji() {
     const [isOpen, setIsOpen] = useState<boolean>(false);
-    const { isBlocked, setMessageState, userState, messageState } =
-        useGlobalContext();
+    const {
+        isBlocked,
+        setMessageState,
+        userState,
+        messageState,
+        isSmallScreen,
+    } = useGlobalContext();
 
     return (
-        <div className="relative">
+        <div className={`${isSmallScreen ? "" : "relative"}`}>
             <button
                 type="button"
                 onClick={() => setIsOpen(true)}
@@ -17,7 +22,13 @@ function Emoji() {
                 🙂
             </button>
             {isOpen && (
-                <div className=" absolute bottom-0 right-0">
+                <div
+                    className={`absolute bottom-0 right-0 ${
+                        isSmallScreen
+                            ? "translate-x-[16vw] -translate-y-[8vh]"
+                            : ""
+                    }`}
+                >
                     <EmojiPicker
                         onEmojiClick={(e) => {
                             setMessageState((pre) => ({
@@ -30,7 +41,7 @@ function Emoji() {
                     />
                     <button
                         type="button"
-                        className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/2 btn btn-sm btn-circle"
+                        className="absolute top-0 left-0 -translate-y-1/2 -translate-x-1/2 btn btn-sm btn-circle"
                         onClick={() => setIsOpen(false)}
                     >
                         x

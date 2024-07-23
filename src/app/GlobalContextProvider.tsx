@@ -36,10 +36,12 @@ export type MessageStateType = {
     image: string;
 };
 
-type ImageStateType = {
+export type ImageStateType = {
     imageUrl: string;
     imageFile: File;
 };
+
+export type OpenSectionType = "left" | "center" | "right";
 
 type ContextType = {
     userState: UserStateType;
@@ -51,6 +53,12 @@ type ContextType = {
     imageState: ImageStateType;
     setImageState: Dispatch<SetStateAction<ImageStateType>>;
     isBlocked: boolean;
+    isMeBlocked: boolean;
+    screenSize: number;
+    setScreenSize: Dispatch<SetStateAction<number>>;
+    isSmallScreen: boolean;
+    openSection: OpenSectionType;
+    setOpenSection: Dispatch<SetStateAction<OpenSectionType>>;
 };
 
 const GlobalContext = createContext<ContextType | null>(null);
@@ -66,9 +74,16 @@ function GlobalContextProvider({ children }: Props) {
         message: "",
     } as MessageStateType);
     const [imageState, setImageState] = useState({} as ImageStateType);
-    const isBlocked =
-        userState?.user?.blocks?.includes(chatState?.user?.userId) ||
-        chatState?.user?.blocks?.includes(userState?.user?.userId);
+    const isBlocked = userState?.user?.blocks?.includes(
+        chatState?.user?.userId,
+    );
+    const isMeBlocked = chatState?.user?.blocks?.includes(
+        userState?.user?.userId,
+    );
+    const [screenSize, setScreenSize] = useState(0);
+    const isSmallScreen = screenSize <= 768;
+
+    const [openSection, setOpenSection] = useState<OpenSectionType>("left");
 
     return (
         <GlobalContext.Provider
@@ -82,6 +97,12 @@ function GlobalContextProvider({ children }: Props) {
                 imageState,
                 setImageState,
                 isBlocked,
+                isMeBlocked,
+                screenSize,
+                setScreenSize,
+                openSection,
+                setOpenSection,
+                isSmallScreen,
             }}
         >
             {children}

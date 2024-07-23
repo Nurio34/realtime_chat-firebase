@@ -1,4 +1,5 @@
 import {
+    ImageStateType,
     MessageStateType,
     useGlobalContext,
 } from "@/app/GlobalContextProvider";
@@ -15,11 +16,12 @@ function SendButton() {
         setMessageState,
         userState,
         imageState,
+        setImageState,
         isBlocked,
     } = useGlobalContext();
 
     const sendMessage = async () => {
-        if (messageState?.message?.trim() === "") return;
+        if (!imageState.imageUrl && !messageState?.message?.trim()) return;
 
         try {
             let imageUrl: any = "";
@@ -29,7 +31,12 @@ function SendButton() {
             }
 
             await updateDoc(doc(db, "chats", chatState.chatId), {
-                messages: arrayUnion({ ...messageState, image: imageUrl }),
+                messages: arrayUnion({
+                    ...messageState,
+                    createdAt: new Date().toLocaleTimeString(),
+                    senderId: userState.user.userId,
+                    image: imageUrl,
+                }),
             });
 
             const userIds = [userState.user.userId, chatState.user.userId];
@@ -68,6 +75,7 @@ function SendButton() {
             throw new Error(JSON.stringify(error));
         } finally {
             setMessageState({} as MessageStateType);
+            setImageState({} as ImageStateType);
         }
     };
 

@@ -16,7 +16,8 @@ export type ChatListItemType = {
 function List() {
     const Div = useRef<HTMLDivElement | null>(null);
     const [divHeight, setDivHeight] = useState<number>(0);
-    const { userState, setChatState, chatState } = useGlobalContext();
+    const { userState, setChatState, chatState, setOpenSection, screenSize } =
+        useGlobalContext();
     const [chats, setChats] = useState<ChatListItemType[]>(
         [] as ChatListItemType[],
     );
@@ -63,7 +64,7 @@ function List() {
     const [isClicked, setIsClicked] = useState<boolean>(false);
 
     useEffect(() => {
-        if (FirstChatButton.current && !isClicked) {
+        if (FirstChatButton.current && !isClicked && screenSize > 768) {
             FirstChatButton.current.click();
             setIsClicked(true);
         }
@@ -89,25 +90,6 @@ function List() {
                                 className="grid grid-cols-[2fr,4fr] items-center gap-[1vw] border-b border-base-content py-[2vh]"
                                 ref={ind === 0 ? FirstChatButton : undefined}
                                 onClick={async () => {
-                                    // if (
-                                    //     userState.user.blocks.includes(
-                                    //         chat.reciverId,
-                                    //     ) ||
-                                    //     chat.user.blocks.includes(
-                                    //         userState.user.userId,
-                                    //     )
-                                    // ) {
-                                    //     setChatState({
-                                    //         chatId: userState.user.userId,
-                                    //         user: {
-                                    //             userId: chat.user.userId,
-                                    //         } as UserType,
-                                    //         isBlocked: true,
-                                    //     });
-
-                                    //     return;
-                                    // }
-
                                     setChatState({
                                         chatId: chat.chatId,
                                         user: chat.user,
@@ -149,6 +131,8 @@ function List() {
                                                         : chatList,
                                             ),
                                         });
+
+                                        setOpenSection("center");
                                     }
                                 }}
                             >

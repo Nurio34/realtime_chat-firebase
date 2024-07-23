@@ -9,7 +9,8 @@ import { useGlobalContext, UserType } from "@/app/GlobalContextProvider";
 
 function App() {
     const [theme, setTheme] = useState<string>("");
-    const { userState, setUserState } = useGlobalContext();
+    const { userState, setUserState, openSection, isSmallScreen } =
+        useGlobalContext();
 
     useEffect(() => {
         const html = document.querySelector("html");
@@ -26,7 +27,7 @@ function App() {
                 if (res) {
                     const userData = res.data() as UserType;
 
-                    setUserState((pre) => ({ ...pre, userData }));
+                    setUserState((pre) => ({ ...pre, user: userData }));
                 }
             },
         );
@@ -36,8 +37,12 @@ function App() {
 
     return (
         <main
-            className={`w-[90vw] h-[90vh] 
-              grid grid-cols-[1fr,2fr,1fr]
+            className={`
+              grid ${
+                  isSmallScreen
+                      ? "w-screen h-screen overflow-hidden"
+                      : "grid-cols-[1fr,2fr,1fr] w-[90vw] h-[90vh] rounded-[5vw]"
+              }
               ${
                   lightThemes.includes(theme)
                       ? "bg-[rgba(255,255,255,0.4)]"
@@ -45,9 +50,19 @@ function App() {
               }
             `}
         >
-            <Left />
-            <Center />
-            <Right />
+            {isSmallScreen ? (
+                <>
+                    {openSection === "left" && <Left />}
+                    {openSection === "center" && <Center />}
+                    {openSection === "right" && <Right />}
+                </>
+            ) : (
+                <>
+                    <Left />
+                    <Center />
+                    <Right />
+                </>
+            )}
         </main>
     );
 }

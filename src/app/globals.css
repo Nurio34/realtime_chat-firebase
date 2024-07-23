@@ -12,6 +12,9 @@ body {
 }
 
 main {
-    border-radius: 5vh;
     backdrop-filter: blur(20px) hue-rotate(15deg);
+}
+
+.scroll-transparent {
+    scrollbar-width: none; /* Options: auto, thin */
 }

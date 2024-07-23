@@ -10,7 +10,9 @@ import { doc, getDoc } from "firebase/firestore";
 import AppSkeleton from "./Components/AppSkeleton";
 
 export default function Home() {
-    const { userState, setUserState } = useGlobalContext();
+    const { userState, setUserState, setScreenSize, setOpenSection } =
+        useGlobalContext();
+    const isDomLoaded = typeof window !== "undefined";
 
     useEffect(() => {
         const unSub = onAuthStateChanged(auth, (user) => {
@@ -49,8 +51,28 @@ export default function Home() {
             }
         });
 
-        return () => unSub();
-    }, [setUserState]);
+        const handleScreenSize = (e: UIEvent) => {
+            setScreenSize(window.innerWidth);
+        };
+
+        const handlePopSate = (e: PopStateEvent) => {
+            setOpenSection("left");
+        };
+
+        if (isDomLoaded) {
+            window.addEventListener("resize", handleScreenSize);
+            setScreenSize(window.innerWidth);
+            window.addEventListener("popstate", handlePopSate);
+        }
+
+        return () => {
+            unSub();
+            if (isDomLoaded) {
+                window.removeEventListener("resize", handleScreenSize);
+                window.removeEventListener("popstate", handlePopSate);
+            }
+        };
+    }, [setUserState, setScreenSize, setOpenSection]);
 
     const isAuthed = Boolean(userState?.user?.userId);
 

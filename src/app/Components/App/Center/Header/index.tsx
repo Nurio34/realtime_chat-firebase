@@ -4,7 +4,7 @@ import { useGlobalContext } from "@/app/GlobalContextProvider";
 
 function Header() {
     const { chatState, userState, isBlocked } = useGlobalContext();
-    console.log({ user: userState.user, chat: chatState.user });
+    ({ user: userState.user, chat: chatState.user });
 
     return (
         <div className="grid grid-cols-[0.1fr,1fr,auto] gap-x-[1vw] items-center">
@@ -13,7 +13,7 @@ function Header() {
                     src={
                         isBlocked
                             ? "/block.webp"
-                            : chatState?.user?.avatar || "/her.webp"
+                            : chatState?.user?.avatar || "/hero.webp"
                     }
                     fill
                     alt="img"

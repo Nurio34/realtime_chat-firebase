@@ -63,7 +63,7 @@ function Messages() {
     return (
         <div ref={Div} className=" max-h-full">
             <ul
-                className="MessagesContainer space-y-[2vh] border-y border-base-content overflow-y-auto py-[1vh]"
+                className="scroll-transparent space-y-[2vh] border-y border-base-content overflow-y-auto py-[1vh]"
                 style={{ height: divHeight }}
             >
                 {chat?.messages?.map((message, ind) => {
@@ -109,7 +109,7 @@ function Messages() {
                             >
                                 {message.image && (
                                     <figure
-                                        className={`relative overflow-hidden rounded-lg w-2/4 aspect-video
+                                        className={`relative overflow-hidden rounded-lg w-2/4 aspect-video 
                                         ${
                                             isMsgMine
                                                 ? "justify-self-end  "
@@ -124,22 +124,36 @@ function Messages() {
                                             className="object-contain"
                                             sizes="(min-width:768px) 33vw, 15vw"
                                         />
+                                        {!message.message && (
+                                            <span
+                                                className={`text-xs absolute bottom-0 ${
+                                                    message.senderId ===
+                                                    userState.user.userId
+                                                        ? "right-0 text-accent"
+                                                        : "left-0 text-secondary"
+                                                }`}
+                                            >
+                                                {message.createdAt.slice(0, 5)}
+                                            </span>
+                                        )}
                                     </figure>
                                 )}
-                                <p
-                                    className={`bubble w-3/4 rounded-b-lg py-[1vh] px-[1vw] 
+                                {message.message && (
+                                    <p
+                                        className={`bubble w-3/4 rounded-b-lg py-[1vh] px-[1vw] 
                                             grid
                                         ${
                                             isMsgMine
                                                 ? "bubble-right text-accent-content bg-accent justify-self-end  "
                                                 : "bubble-left text-secondary-content bg-secondary justify-self-start"
                                         }`}
-                                >
-                                    {message.message}
-                                    <span className="justify-self-end text-xs">
-                                        {message.createdAt.slice(0, 5)}
-                                    </span>
-                                </p>
+                                    >
+                                        {message.message}
+                                        <span className="justify-self-end text-xs">
+                                            {message.createdAt.slice(0, 5)}
+                                        </span>
+                                    </p>
+                                )}
                             </div>
                         </li>
                     );
