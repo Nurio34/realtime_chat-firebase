@@ -24,7 +24,9 @@ function Search() {
     const [user, setUser] = useState<UserType>({} as UserType);
     const { userState } = useGlobalContext();
 
-    const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    const handleSearchUserFromDatabase = async (
+        e: FormEvent<HTMLFormElement>,
+    ) => {
         e.preventDefault();
         try {
             const usersRef = collection(db, "users");
@@ -112,7 +114,7 @@ function Search() {
                     >
                         <form
                             className="py-[1vh] join flex"
-                            onSubmit={handleSubmit}
+                            onSubmit={handleSearchUserFromDatabase}
                         >
                             <input
                                 type="text"

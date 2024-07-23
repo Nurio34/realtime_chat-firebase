@@ -4,14 +4,15 @@ import { useState } from "react";
 
 function Emoji() {
     const [isOpen, setIsOpen] = useState<boolean>(false);
-    const { chatState, setMessageState, userState } = useGlobalContext();
+    const { isBlocked, setMessageState, userState, messageState } =
+        useGlobalContext();
 
     return (
         <div className="relative">
             <button
                 type="button"
                 onClick={() => setIsOpen(true)}
-                disabled={chatState.isBlocked}
+                disabled={isBlocked}
             >
                 🙂
             </button>
@@ -20,9 +21,10 @@ function Emoji() {
                     <EmojiPicker
                         onEmojiClick={(e) => {
                             setMessageState((pre) => ({
-                                createdAt: new Date(),
+                                createdAt: new Date().toLocaleTimeString(),
                                 senderId: userState.user.userId,
                                 message: pre.message + e.emoji,
+                                image: messageState.image,
                             }));
                         }}
                     />

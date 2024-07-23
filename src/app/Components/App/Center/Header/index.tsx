@@ -3,27 +3,24 @@ import Actions from "./Actions";
 import { useGlobalContext } from "@/app/GlobalContextProvider";
 
 function Header() {
-    const { chatState } = useGlobalContext();
+    const { chatState, userState, isBlocked } = useGlobalContext();
+    console.log({ user: userState.user, chat: chatState.user });
 
     return (
         <div className="grid grid-cols-[0.1fr,1fr,auto] gap-x-[1vw] items-center">
             <figure className="relative aspect-square rounded-full overflow-hidden">
                 <Image
-                    src={chatState?.user?.avatar || "/block.webp"}
+                    src={isBlocked ? "/block.webp" : chatState?.user?.avatar}
                     fill
                     alt="img"
                 />
             </figure>
             <div>
                 <p className="capitalize">
-                    {chatState?.user?.username || "Block"}
+                    {isBlocked ? "Block" : chatState?.user?.username}
                 </p>
-                <p
-                    className={`${
-                        chatState?.isBlocked ? "text-error font-semibold" : ""
-                    }`}
-                >
-                    {chatState?.isBlocked
+                <p className={`${isBlocked ? "text-error font-semibold" : ""}`}>
+                    {!chatState.chatId || chatState.isBlocked
                         ? "There is block between users"
                         : "Greatfull for every sunrise"}
                 </p>

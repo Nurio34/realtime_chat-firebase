@@ -32,7 +32,13 @@ export type ChatStateType = {
 export type MessageStateType = {
     senderId: string;
     message: string;
-    createdAt: Date;
+    createdAt: string;
+    image: string;
+};
+
+type ImageStateType = {
+    imageUrl: string;
+    imageFile: File;
 };
 
 type ContextType = {
@@ -42,6 +48,9 @@ type ContextType = {
     setChatState: Dispatch<SetStateAction<ChatStateType>>;
     messageState: MessageStateType;
     setMessageState: Dispatch<SetStateAction<MessageStateType>>;
+    imageState: ImageStateType;
+    setImageState: Dispatch<SetStateAction<ImageStateType>>;
+    isBlocked: boolean;
 };
 
 const GlobalContext = createContext<ContextType | null>(null);
@@ -53,7 +62,13 @@ type Props = {
 function GlobalContextProvider({ children }: Props) {
     const [userState, setUserState] = useState({} as UserStateType);
     const [chatState, setChatState] = useState({} as ChatStateType);
-    const [messageState, setMessageState] = useState({} as MessageStateType);
+    const [messageState, setMessageState] = useState({
+        message: "",
+    } as MessageStateType);
+    const [imageState, setImageState] = useState({} as ImageStateType);
+    const isBlocked =
+        userState?.user?.blocks?.includes(chatState?.user?.userId) ||
+        chatState?.user?.blocks?.includes(userState?.user?.userId);
 
     return (
         <GlobalContext.Provider
@@ -64,6 +79,9 @@ function GlobalContextProvider({ children }: Props) {
                 setChatState,
                 messageState,
                 setMessageState,
+                imageState,
+                setImageState,
+                isBlocked,
             }}
         >
             {children}

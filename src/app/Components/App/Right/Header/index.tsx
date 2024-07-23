@@ -11,21 +11,25 @@ function Header() {
                     src={chatState?.user?.avatar || "/block.webp"}
                     fill
                     alt={
-                        chatState?.isBlocked
+                        !chatState.chatId || chatState.isBlocked
                             ? "Block Image"
                             : `avatar of ${chatState?.user?.username}`
                     }
                 />
             </figure>
             <p className="capitalize">
-                {chatState?.isBlocked ? "Block" : chatState?.user?.username}
+                {!chatState.chatId || chatState.isBlocked
+                    ? "Block"
+                    : chatState?.user?.username}
             </p>
             <p
                 className={`${
-                    chatState?.isBlocked ? "text-error font-semibold" : ""
+                    !chatState.chatId || chatState.isBlocked
+                        ? "text-error font-semibold"
+                        : ""
                 }`}
             >
-                {chatState?.isBlocked
+                {!chatState.chatId || chatState.isBlocked
                     ? "There is block between users"
                     : "Greatful for every sunrise"}
             </p>

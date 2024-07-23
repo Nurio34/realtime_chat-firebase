@@ -1,7 +1,7 @@
 import { useGlobalContext } from "@/app/GlobalContextProvider";
 
 function MessageInput() {
-    const { chatState, setMessageState, userState, messageState } =
+    const { chatState, setMessageState, userState, messageState, imageState } =
         useGlobalContext();
 
     return (
@@ -10,18 +10,21 @@ function MessageInput() {
             name="message"
             id="message"
             placeholder={
-                chatState.isBlocked ? "Chat is blocked" : "Type a message"
+                !chatState.chatId || chatState.isBlocked
+                    ? "Chat is blocked"
+                    : "Type a message"
             }
             className="py-2 px-[1vw] outline-none bg-[rgba(0,0,0,0.3)] rounded-md"
-            disabled={chatState.isBlocked}
+            disabled={chatState.isBlocked || !chatState?.chatId}
             onChange={(e) =>
-                setMessageState({
-                    createdAt: new Date(),
+                setMessageState((pre) => ({
+                    ...pre,
+                    createdAt: new Date().toLocaleTimeString(),
                     senderId: userState.user.userId,
                     message: e.target.value,
-                })
+                }))
             }
-            value={messageState.message || ""}
+            value={messageState?.message || ""}
         />
     );
 }
