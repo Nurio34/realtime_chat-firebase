@@ -21,6 +21,10 @@ export default function RootLayout({
             <body className={`${inter.className} min-h-screen`}>
                 <GlobalContextProvider>{children}</GlobalContextProvider>
                 <Toaster position="bottom-right" />
+                <link rel="manifest" href="/manifest.json" />
+                <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
+                <meta name="theme-color" content="#000000" />{" "}
+                {/* Manually add theme-color here */}
             </body>
         </html>
     );
