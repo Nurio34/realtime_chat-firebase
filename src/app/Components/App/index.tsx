@@ -8,19 +8,16 @@ import { db } from "@/app/lib/firebase";
 import { useGlobalContext, UserType } from "@/app/GlobalContextProvider";
 
 function App() {
-    const [theme, setTheme] = useState<string>("");
-    const { userState, setUserState, openSection, isSmallScreen } =
-        useGlobalContext();
+    const {
+        userState,
+        setUserState,
+        openSection,
+        isSmallScreen,
+        setTheme,
+        theme,
+    } = useGlobalContext();
 
     useEffect(() => {
-        const html = document.querySelector("html");
-
-        const htmlTheme = html?.dataset.theme;
-
-        if (htmlTheme) {
-            setTheme(htmlTheme);
-        }
-
         const unSub = onSnapshot(
             doc(db, "users", userState.user.userId),
             async (res) => {

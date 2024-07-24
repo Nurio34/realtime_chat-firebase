@@ -3,7 +3,7 @@ import Image from "next/image";
 import GoBackButton from "../../_Components/GoBackButton";
 
 function Header() {
-    const { chatState } = useGlobalContext();
+    const { chatState, isSmallScreen } = useGlobalContext();
 
     return (
         <div className="text-center space-y-[1vh]">
@@ -16,7 +16,7 @@ function Header() {
                             ? "Block Image"
                             : `avatar of ${chatState?.user?.username}`
                     }
-                    sizes="(min-width:768px) 20vw, 10vw"
+                    sizes="(min-width:768px) 60vw, 30vw"
                 />
             </figure>
             <p className="capitalize">
@@ -35,7 +35,7 @@ function Header() {
                     ? "There is block between users"
                     : "Greatful for every sunrise"}
             </p>
-            <GoBackButton />
+            {isSmallScreen && <GoBackButton />}
         </div>
     );
 }

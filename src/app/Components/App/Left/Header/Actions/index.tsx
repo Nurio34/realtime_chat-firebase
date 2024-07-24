@@ -14,7 +14,6 @@ function Actions() {
             <button
                 type="button"
                 aria-label="settings"
-                disabled={isBlocked}
                 onClick={() => setOpenSection("right")}
             >
                 <BsThreeDots />

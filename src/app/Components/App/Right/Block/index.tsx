@@ -3,7 +3,8 @@ import { db } from "@/app/lib/firebase";
 import { arrayRemove, arrayUnion, doc, updateDoc } from "firebase/firestore";
 
 function Block() {
-    const { userState, chatState, isBlocked } = useGlobalContext();
+    const { userState, chatState, isBlocked, isMeBlocked, isHimBlocked } =
+        useGlobalContext();
     chatState;
 
     const blockUser = async () => {
@@ -22,12 +23,17 @@ function Block() {
     return (
         <button
             type="button"
-            className={`btn rounded-md ${
-                isBlocked ? "btn-success" : "btn-error"
+            className={`btn rounded-md disabled:bg-warning disabled:text-warning-content  ${
+                isHimBlocked
+                    ? "btn-success"
+                    : isMeBlocked
+                    ? "btn-warning"
+                    : "btn-error"
             }`}
             onClick={blockUser}
+            disabled={isMeBlocked}
         >
-            {isBlocked ? "Unblock" : "Block"}
+            {isHimBlocked ? "Unblock" : isMeBlocked ? "You Blocked" : "Block"}
         </button>
     );
 }

@@ -22,7 +22,7 @@ function Search() {
     const [isSearchOpen, setIsSearchOpen] = useState<boolean>(false);
     const [username, setUsername] = useState<string>("");
     const [user, setUser] = useState<UserType>({} as UserType);
-    const { userState } = useGlobalContext();
+    const { userState, setFilteredChats, chats } = useGlobalContext();
 
     const handleSearchUserFromDatabase = async (
         e: FormEvent<HTMLFormElement>,
@@ -92,8 +92,22 @@ function Search() {
                         type="text"
                         name="search"
                         id="search"
-                        placeholder="Search"
+                        placeholder="Filter List"
                         className="grow bg-transparent outline-none"
+                        onChange={(e) => {
+                            if (!e.target.value) {
+                                setFilteredChats(chats);
+                                return;
+                            }
+
+                            setFilteredChats(
+                                chats.filter((chat) =>
+                                    chat.user.username
+                                        .toLowerCase()
+                                        .includes(e.target.value.toLowerCase()),
+                                ),
+                            );
+                        }}
                     />
                 </div>
                 <button
@@ -133,7 +147,7 @@ function Search() {
                                         src={user?.avatar}
                                         fill
                                         alt={`avatar of ${user.username}`}
-                                        sizes="(min-width:768px) 20vw, 10vw"
+                                        sizes="(min-width:768px) 60vw, 30vw"
                                     />
                                 </figure>
                                 <p className="capitalize">{user.username}</p>

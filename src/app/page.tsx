@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import App from "./Components/App";
 import Register from "./Components/Register";
 import { useGlobalContext, UserType } from "./GlobalContextProvider";
@@ -10,7 +10,7 @@ import { doc, getDoc } from "firebase/firestore";
 import AppSkeleton from "./Components/AppSkeleton";
 
 export default function Home() {
-    const { userState, setUserState, setScreenSize, setOpenSection } =
+    const { userState, setUserState, setScreenSize, setOpenSection, setTheme } =
         useGlobalContext();
     const isDomLoaded = typeof window !== "undefined";
 
@@ -19,7 +19,13 @@ export default function Home() {
             if (user) {
                 const getUserInfo = async () => {
                     setUserState((pre) => ({ ...pre, isLoading: true }));
+
                     try {
+                        // Adding a slight delay to handle Firestore latency
+                        await new Promise((resolve) =>
+                            setTimeout(resolve, 100),
+                        );
+
                         const docRef = doc(db, "users", user.uid);
                         const docSnap = await getDoc(docRef);
 
@@ -66,6 +72,14 @@ export default function Home() {
             window.addEventListener("popstate", handlePopSate);
         }
 
+        const html = document.querySelector("html");
+
+        const htmlTheme = html?.dataset.theme;
+
+        if (htmlTheme) {
+            setTheme(htmlTheme);
+        }
+
         return () => {
             unSub();
             if (isDomLoaded) {
@@ -73,7 +87,7 @@ export default function Home() {
                 window.removeEventListener("popstate", handlePopSate);
             }
         };
-    }, [setUserState, setScreenSize, setOpenSection]);
+    }, [setUserState, setScreenSize, setOpenSection, setTheme]);
 
     const isAuthed = Boolean(userState?.user?.userId);
 

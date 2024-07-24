@@ -17,7 +17,7 @@ function Header() {
                     }
                     fill
                     alt="img"
-                    sizes="(min-width:768px) 20vw, 10vw"
+                    sizes="(min-width:768px) 60vw, 30vw"
                 />
             </figure>
             <div>
@@ -25,7 +25,7 @@ function Header() {
                     {isBlocked ? "Block" : chatState?.user?.username}
                 </p>
                 <p className={`${isBlocked ? "text-error font-semibold" : ""}`}>
-                    {!chatState.chatId || chatState.isBlocked
+                    {isBlocked
                         ? "There is block between users"
                         : "Greatfull for every sunrise"}
                 </p>

@@ -1,27 +1,26 @@
-import { useGlobalContext, UserType } from "@/app/GlobalContextProvider";
+import {
+    ChatListItemType,
+    useGlobalContext,
+    UserType,
+} from "@/app/GlobalContextProvider";
 import { db } from "@/app/lib/firebase";
 import { doc, getDoc, onSnapshot, updateDoc } from "firebase/firestore";
 import Image from "next/image";
 import React, { useEffect, useRef, useState } from "react";
 
-export type ChatListItemType = {
-    lastMessage: string;
-    chatId: string;
-    updatedAt: number;
-    reciverId: string;
-    isSeen: boolean;
-    user: UserType;
-};
-
 function List() {
     const Div = useRef<HTMLDivElement | null>(null);
     const [divHeight, setDivHeight] = useState<number>(0);
-    const { userState, setChatState, chatState, setOpenSection, screenSize } =
-        useGlobalContext();
-    const [chats, setChats] = useState<ChatListItemType[]>(
-        [] as ChatListItemType[],
-    );
-    chatState;
+    const {
+        userState,
+        setChatState,
+        setChats,
+        chats,
+        filteredChats,
+        setOpenSection,
+        screenSize,
+        isSmallScreen,
+    } = useGlobalContext();
 
     useEffect(() => {
         if (Div.current) {
@@ -64,11 +63,11 @@ function List() {
     const [isClicked, setIsClicked] = useState<boolean>(false);
 
     useEffect(() => {
-        if (FirstChatButton.current && !isClicked && screenSize > 768) {
+        if (FirstChatButton.current && !isClicked && !isSmallScreen) {
             FirstChatButton.current.click();
             setIsClicked(true);
         }
-    }, [chats, isClicked]);
+    }, [chats, filteredChats, isClicked]);
 
     return (
         <div ref={Div} className="relative max-h-full  overflow-hidden ">
@@ -76,18 +75,23 @@ function List() {
                 className="ListContainer absolute top-0 left-0 w-full overflow-y-auto"
                 style={{ maxHeight: divHeight }}
             >
-                {chats.map((chat, ind) => {
+                {filteredChats.map((chat, ind) => {
                     return (
                         <li
                             key={ind}
-                            className={`rounded-md px-[1vw] ${
+                            className={`rounded-md px-[1vw] max-w-96 mx-auto ${
                                 chat.isSeen
                                     ? ""
                                     : "bg-secondary/40 text-secondary-content"
                             }`}
                         >
                             <button
-                                className="grid grid-cols-[2fr,4fr] items-center gap-[1vw] border-b border-base-content py-[2vh]"
+                                className={`w-full grid items-center border-b border-base-content py-[2vh]
+                                     ${
+                                         isSmallScreen
+                                             ? "grid-cols-[1fr,5fr] gap-[4vw]"
+                                             : "grid-cols-[2fr,4fr] gap-[1vw]"
+                                     }`}
                                 ref={ind === 0 ? FirstChatButton : undefined}
                                 onClick={async () => {
                                     setChatState({
@@ -141,7 +145,7 @@ function List() {
                                         src={chat?.user?.avatar}
                                         fill
                                         alt={`avatar of ${chat?.user?.username}`}
-                                        sizes="(min-width:768px) 20vw, 10vw"
+                                        sizes="(min-width:768px) 60vw, 30vw"
                                     />
                                 </figure>
                                 <div>

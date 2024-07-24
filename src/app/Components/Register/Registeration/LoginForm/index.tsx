@@ -1,5 +1,7 @@
 import { useGlobalContext } from "@/app/GlobalContextProvider";
 import { auth } from "@/app/lib/firebase";
+import { lightThemes } from "@/app/utilities/daisyui_lightThemes";
+import { isSchema } from "@hookform/resolvers/typanion/src/__tests__/__fixtures__/data.js";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { Dispatch, SetStateAction } from "react";
@@ -18,6 +20,9 @@ function LoginForm({
 }: {
     setIsLoginForm: Dispatch<SetStateAction<boolean>>;
 }) {
+    const { isSmallScreen, theme } = useGlobalContext();
+    const isLightTheme = lightThemes.includes(theme);
+
     const { register, handleSubmit, formState } = useForm<LoginFormType>({
         resolver: zodResolver(LoginFormSchema),
     });
@@ -35,17 +40,29 @@ function LoginForm({
 
     return (
         <form
-            className="  w-2/3 aspect-[9/10] m-auto"
+            className={`${
+                isSmallScreen ? "h-screen" : " w-2/3 aspect-[9/10] m-auto"
+            }`}
             onSubmit={handleSubmit(onSubmit)}
         >
             <fieldset
-                className="space-y-[2vh] shadow-md shadow-base-content  py-[2vh] px-[2vw] rounded-xl
-                bg-[rgba(0,0,0,0.3)]
-            "
+                className={`space-y-[2vh] shadow-md shadow-base-content  py-[2vh] px-[2vw] rounded-xl  ${
+                    isLightTheme
+                        ? "bg-[rgba(255,255,255,0.3)]"
+                        : "bg-[rgba(0,0,0,0.3)]"
+                }
+                    ${isSmallScreen ? "h-screen grid place-content-center" : ""}
+                    `}
             >
-                <legend className="text-center font-semibold text-3xl p-4 shadow-md shadow-base-content rounded-3xl">
-                    Login
-                </legend>
+                {!isSmallScreen ? (
+                    <legend className="text-center font-semibold text-3xl p-4 shadow-md shadow-base-content rounded-3xl">
+                        Login
+                    </legend>
+                ) : (
+                    <h1 className="text-center font-bold text-2xl uppercase text-white">
+                        Login
+                    </h1>
+                )}
                 <label htmlFor="email" className="grid pb-[2vh]">
                     <input
                         type="email"
@@ -86,10 +103,12 @@ function LoginForm({
                 </button>
 
                 <div className="flex gap-x-1">
-                    <p>You don&apos;t have an account ?</p>
+                    <p className="text-white">
+                        You don&apos;t have an account ?
+                    </p>
                     <button
                         type="button"
-                        className="text-primary underline-offset-2"
+                        className="text-accent underline underline-offset-2"
                         onClick={() => setIsLoginForm(false)}
                     >
                         Sign up for free !

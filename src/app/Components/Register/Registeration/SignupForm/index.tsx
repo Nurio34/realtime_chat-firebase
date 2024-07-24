@@ -11,6 +11,7 @@ import { auth, db } from "@/app/lib/firebase";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
 import uploadAvatar from "@/app/lib/uploadAvatar";
+import { lightThemes } from "@/app/utilities/daisyui_lightThemes";
 
 const SignupFormSchema = z
     .object({
@@ -32,6 +33,9 @@ function SignupForm({
 }: {
     setIsLoginForm: Dispatch<SetStateAction<boolean>>;
 }) {
+    const { isSmallScreen, theme } = useGlobalContext();
+    const isLightTheme = lightThemes.includes(theme);
+
     const { register, handleSubmit, formState, setValue } =
         useForm<SignupFormType>({
             resolver: zodResolver(SignupFormSchema),
@@ -101,17 +105,29 @@ function SignupForm({
 
     return (
         <form
-            className="  w-2/3 aspect-[9/10] m-auto"
+            className={`${
+                isSmallScreen ? "h-screen" : " w-2/3 aspect-[9/10] m-auto "
+            }`}
             onSubmit={handleSubmit(onSubmit)}
         >
             <fieldset
-                className="space-y-[2vh] shadow-md shadow-base-content  py-[2vh] px-[2vw] rounded-xl
-                bg-[rgba(0,0,0,0.3)]
-            "
+                className={`space-y-[2vh] shadow-md shadow-base-content  py-[2vh] px-[2vw] rounded-xl ${
+                    isLightTheme
+                        ? "bg-[rgba(255,255,255,0.3)]"
+                        : "bg-[rgba(0,0,0,0.3)]"
+                } 
+                ${isSmallScreen ? "h-screen grid place-content-center" : ""}
+                `}
             >
-                <legend className="text-center font-semibold text-3xl p-4 shadow-md shadow-base-content rounded-3xl">
-                    Signup
-                </legend>
+                {!isSmallScreen ? (
+                    <legend className="text-center font-semibold text-3xl p-4 shadow-md shadow-base-content rounded-3xl">
+                        Signup
+                    </legend>
+                ) : (
+                    <h1 className="text-center font-bold text-2xl uppercase ">
+                        SignUp
+                    </h1>
+                )}
                 <label htmlFor="username" className="grid pb-[2vh]">
                     <input
                         type="text"
@@ -219,14 +235,14 @@ function SignupForm({
                 >
                     <figure className="relative aspect-square rounded-full overflow-hidden border border-base-content cursor-pointer">
                         <Image
-                            src={avatar || "/wallpaper.jfif"}
+                            src={avatar || "/wallpaper.webp"}
                             fill
                             alt="avatar"
                             className="object-cover"
-                            sizes="(min-width:768px) 20vw, 10vw"
+                            sizes="(min-width:768px) 60vw, 30vw"
                         />
                     </figure>
-                    <span className=" text-primary underline underline-offset-2 justify-self-end font-semibold text-lg cursor-pointer">
+                    <span className=" text-accent underline underline-offset-2 justify-self-end font-semibold text-lg cursor-pointer">
                         {" "}
                         Upload Avatar
                     </span>
@@ -249,10 +265,10 @@ function SignupForm({
                     {isSubmitting ? "Signing..." : "Signup"}
                 </button>
                 <div className="flex gap-x-1">
-                    <p>Already have an account ?</p>
+                    <p className=" ">Already have an account ?</p>
                     <button
                         type="button"
-                        className="text-primary underline-offset-2"
+                        className="text-accent underline underline-offset-2"
                         onClick={() => setIsLoginForm(true)}
                     >
                         Login

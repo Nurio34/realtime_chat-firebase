@@ -71,6 +71,10 @@ function Messages() {
                         message.senderId === userState.user.userId
                             ? true
                             : false;
+                    const msgTime =
+                        message.createdAt.split(":")[0].length === 1
+                            ? "0".concat(message.createdAt)
+                            : message.createdAt;
 
                     return (
                         <li
@@ -96,7 +100,7 @@ function Messages() {
                                                 ? userState.user.username
                                                 : chatState.user.username
                                         }`}
-                                        sizes="(min-width:768px) 20vw, 10vw"
+                                        sizes="(min-width:768px) 60vw, 30vw"
                                     />
                                 </figure>
                             ) : (
@@ -122,7 +126,7 @@ function Messages() {
                                             fill
                                             alt="image"
                                             className="object-contain"
-                                            sizes="(min-width:768px) 33vw, 15vw"
+                                            sizes="(min-width:768px) 60vw, 30vw"
                                         />
                                         {!message.message && (
                                             <span
@@ -133,7 +137,7 @@ function Messages() {
                                                         : "left-0 text-secondary"
                                                 }`}
                                             >
-                                                {message.createdAt.slice(0, 5)}
+                                                {msgTime.slice(0, 5)}
                                             </span>
                                         )}
                                     </figure>
@@ -150,7 +154,7 @@ function Messages() {
                                     >
                                         {message.message}
                                         <span className="justify-self-end text-xs">
-                                            {message.createdAt.slice(0, 5)}
+                                            {msgTime.slice(0, 5)}
                                         </span>
                                     </p>
                                 )}

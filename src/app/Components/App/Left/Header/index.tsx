@@ -20,7 +20,7 @@ function Header() {
                     src={avatar}
                     fill
                     alt="img"
-                    sizes="(min-width:768px) 20vw, 10vw"
+                    sizes="(min-width:768px) 60vw, 30vw"
                 />
             </figure>
             <p className="capitalize">{username}</p>
