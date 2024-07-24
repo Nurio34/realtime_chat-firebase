@@ -1,4 +1,5 @@
 import {
+    ChatListItemType,
     ImageStateType,
     MessageStateType,
     useGlobalContext,
@@ -6,7 +7,6 @@ import {
 import { db } from "@/app/lib/firebase";
 import { arrayUnion, doc, getDoc, updateDoc } from "firebase/firestore";
 import { IoIosSend } from "react-icons/io";
-import { ChatListItemType } from "../../../Left/List";
 import uploadAvatar from "@/app/lib/uploadAvatar";
 
 function SendButton() {
