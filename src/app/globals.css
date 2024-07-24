@@ -2,6 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
+body,
+html {
+    overscroll-behavior: "none";
+}
+
 body {
     background-image: url("/wallpaper.webp");
     background-size: cover;
