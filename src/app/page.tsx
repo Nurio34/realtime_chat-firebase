@@ -70,6 +70,16 @@ export default function Home() {
             window.addEventListener("resize", handleScreenSize);
             setScreenSize(window.innerWidth);
             window.addEventListener("popstate", handlePopSate);
+
+            document.addEventListener(
+                "touchmove",
+                (event) => {
+                    if (event.touches.length > 1) {
+                        event.preventDefault(); // Prevents pinch-zoom
+                    }
+                },
+                { passive: false },
+            );
         }
 
         const html = document.querySelector("html");
