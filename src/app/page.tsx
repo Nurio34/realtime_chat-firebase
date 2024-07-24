@@ -80,6 +80,36 @@ export default function Home() {
                 },
                 { passive: false },
             );
+            let lastTouchY = 0;
+            let preventPullToRefresh = false;
+
+            document.addEventListener(
+                "touchstart",
+                (event) => {
+                    if (event.touches.length !== 1) return;
+                    lastTouchY = event.touches[0].clientY;
+                    preventPullToRefresh = window.pageYOffset === 0;
+                },
+                { passive: false },
+            );
+
+            document.addEventListener(
+                "touchmove",
+                (event) => {
+                    const touchY = event.touches[0].clientY;
+                    const touchYDelta = touchY - lastTouchY;
+                    lastTouchY = touchY;
+
+                    if (preventPullToRefresh) {
+                        preventPullToRefresh = false;
+                        if (touchYDelta > 0) {
+                            event.preventDefault();
+                            return;
+                        }
+                    }
+                },
+                { passive: false },
+            );
         }
 
         const html = document.querySelector("html");
