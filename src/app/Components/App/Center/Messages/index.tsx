@@ -169,7 +169,7 @@ function Messages() {
                                             fill
                                             alt="image"
                                             className="object-contain"
-                                            sizes="(min-width:768px) 60vw, 30vw"
+                                            sizes="(min-width:768px) 60vw, 100vw"
                                         />
                                         {!message.message && (
                                             <span

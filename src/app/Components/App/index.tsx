@@ -48,9 +48,14 @@ function App() {
                     const chatData = res.data() as ChatType | undefined;
 
                     if (chatData) {
-                        console.log({ chatData });
                         setChat(chatData);
-                        setIsPlaying((pre) => (pre = true));
+
+                        if (
+                            chatData.messages[chatData.messages.length - 1]
+                                .senderId !== userState.user.userId
+                        ) {
+                            setIsPlaying((pre) => (pre = true));
+                        }
                     }
 
                     if (Audio.current) {
