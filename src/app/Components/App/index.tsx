@@ -50,12 +50,7 @@ function App() {
                     if (chatData) {
                         setChat(chatData);
 
-                        if (
-                            chatData.messages[chatData.messages.length - 1]
-                                .senderId !== userState.user.userId
-                        ) {
-                            setIsPlaying((pre) => (pre = true));
-                        }
+                        setIsPlaying((pre) => (pre = true));
                     }
 
                     if (Audio.current) {
