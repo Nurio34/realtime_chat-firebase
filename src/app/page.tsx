@@ -23,7 +23,7 @@ export default function Home() {
                     try {
                         // Adding a slight delay to handle Firestore latency
                         await new Promise((resolve) =>
-                            setTimeout(resolve, 100),
+                            setTimeout(resolve, 1000),
                         );
 
                         const docRef = doc(db, "users", user.uid);
@@ -70,48 +70,9 @@ export default function Home() {
             window.addEventListener("resize", handleScreenSize);
             setScreenSize(window.innerWidth);
             window.addEventListener("popstate", handlePopSate);
-
-            document.addEventListener(
-                "touchmove",
-                (event) => {
-                    if (event.touches.length > 1) {
-                        event.preventDefault(); // Prevents pinch-zoom
-                    }
-                },
-                { passive: false },
-            );
-            let lastTouchY = 0;
-            let preventPullToRefresh = false;
-
-            document.addEventListener(
-                "touchstart",
-                (event) => {
-                    if (event.touches.length !== 1) return;
-                    lastTouchY = event.touches[0].clientY;
-                    preventPullToRefresh = window.pageYOffset === 0;
-                },
-                { passive: false },
-            );
-
-            document.addEventListener(
-                "touchmove",
-                (event) => {
-                    const touchY = event.touches[0].clientY;
-                    const touchYDelta = touchY - lastTouchY;
-                    lastTouchY = touchY;
-
-                    if (preventPullToRefresh) {
-                        preventPullToRefresh = false;
-                        if (touchYDelta > 0) {
-                            event.preventDefault();
-                            return;
-                        }
-                    }
-                },
-                { passive: false },
-            );
         }
 
+        //** --- SET INITIAL THEME TO THEME-STATE */
         const html = document.querySelector("html");
 
         const htmlTheme = html?.dataset.theme;
@@ -119,6 +80,7 @@ export default function Home() {
         if (htmlTheme) {
             setTheme(htmlTheme);
         }
+        //** ------------------------------------- */
 
         return () => {
             unSub();

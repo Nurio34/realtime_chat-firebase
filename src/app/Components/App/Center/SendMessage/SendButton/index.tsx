@@ -8,6 +8,7 @@ import { db } from "@/app/lib/firebase";
 import { arrayUnion, doc, getDoc, updateDoc } from "firebase/firestore";
 import { IoIosSend } from "react-icons/io";
 import uploadAvatar from "@/app/lib/uploadAvatar";
+import { useState } from "react";
 
 function SendButton() {
     const {
@@ -20,8 +21,12 @@ function SendButton() {
         isBlocked,
     } = useGlobalContext();
 
+    const [isSending, setIsSending] = useState<boolean>(false);
+
     const sendMessage = async () => {
         if (!imageState.imageUrl && !messageState?.message?.trim()) return;
+
+        setIsSending(true);
 
         try {
             let imageUrl: any = "";
@@ -76,18 +81,23 @@ function SendButton() {
         } finally {
             setMessageState({} as MessageStateType);
             setImageState({} as ImageStateType);
+            setIsSending(false);
         }
     };
 
     return (
         <button
             type="button"
-            className="bg-[rgba(86,197,88,0.3)] p-2 rounded-md btn aspect-square"
+            className=" p-2 rounded-md btn  btn-square btn-primary disabled:bg-warning disabled:text-warning-content"
             aria-label="send message"
-            disabled={isBlocked}
+            disabled={isBlocked || isSending}
             onClick={sendMessage}
         >
-            <IoIosSend size={20} />
+            {isSending ? (
+                <span className="loading loading-spinner loading-sm"></span>
+            ) : (
+                <IoIosSend size={28} />
+            )}
         </button>
     );
 }

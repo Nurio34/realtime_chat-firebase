@@ -53,6 +53,11 @@ export type ChatListItemType = {
     user: UserType;
 };
 
+export type ChatType = {
+    createdAt: Date;
+    messages: MessageStateType[];
+};
+
 export type RegisterationType = "hero" | "register";
 
 type ContextType = {
@@ -78,6 +83,8 @@ type ContextType = {
     setChats: Dispatch<SetStateAction<ChatListItemType[]>>;
     filteredChats: ChatListItemType[];
     setFilteredChats: Dispatch<SetStateAction<ChatListItemType[]>>;
+    chat: ChatType;
+    setChat: Dispatch<SetStateAction<ChatType>>;
     registerOpenSection: RegisterationType;
     setRegisterOpenSection: Dispatch<SetStateAction<RegisterationType>>;
 };
@@ -119,6 +126,8 @@ function GlobalContextProvider({ children }: Props) {
         setFilteredChats(chats);
     }, [chats, setFilteredChats]);
 
+    const [chat, setChat] = useState<ChatType>({} as ChatType);
+
     const [registerOpenSection, setRegisterOpenSection] =
         useState<RegisterationType>("hero");
 
@@ -146,6 +155,8 @@ function GlobalContextProvider({ children }: Props) {
                 chats,
                 setChats,
                 filteredChats,
+                chat,
+                setChat,
                 setFilteredChats,
                 registerOpenSection,
                 setRegisterOpenSection,

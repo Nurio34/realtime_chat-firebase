@@ -6,7 +6,7 @@ import { MdOutlinePhotoCamera } from "react-icons/md";
 import { RiGalleryFill } from "react-icons/ri";
 
 function Actions() {
-    const { isBlocked, setImageState } = useGlobalContext();
+    const { isBlocked, setImageState, isSmallScreen } = useGlobalContext();
     const ImageFile = useRef<HTMLInputElement | null>(null);
 
     const handleImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -20,7 +20,11 @@ function Actions() {
     };
 
     return (
-        <div className="flex gap-[1vw] items-center">
+        <div
+            className={`flex ${
+                isSmallScreen ? "gap-[3vw]" : "gap-[1vw]"
+            } items-center`}
+        >
             <button
                 type="button"
                 aria-label="gallery"

@@ -9,7 +9,7 @@ function SendMessage() {
     const { isSmallScreen, setOpenSection, setMessageState } =
         useGlobalContext();
     return (
-        <div className="relative grid grid-cols-[auto,1fr,auto,auto] gap-[1vw] items-center">
+        <div className="relative grid grid-cols-[auto,1fr,auto,auto] gap-[1vw] items-center pt-[1vh]">
             <Actions />
             <MessageInput />
             {!isSmallScreen && <Emoji />}

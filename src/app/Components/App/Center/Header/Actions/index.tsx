@@ -3,10 +3,14 @@ import React from "react";
 import { FaInfoCircle, FaPhoneAlt, FaVideo } from "react-icons/fa";
 
 function Actions() {
-    const { isBlocked } = useGlobalContext();
+    const { isBlocked, isSmallScreen } = useGlobalContext();
 
     return (
-        <div className="flex gap-[1vw] items-center">
+        <div
+            className={`flex ${
+                isSmallScreen ? "gap-x-[3vw]" : "gap-[1vw]"
+            } items-center`}
+        >
             <button type="button" aria-label="call" disabled={isBlocked}>
                 <FaPhoneAlt />
             </button>

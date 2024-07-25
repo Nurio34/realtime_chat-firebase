@@ -3,11 +3,18 @@ import Actions from "./Actions";
 import { useGlobalContext } from "@/app/GlobalContextProvider";
 
 function Header() {
-    const { chatState, userState, isBlocked } = useGlobalContext();
+    const { chatState, userState, isBlocked, isSmallScreen } =
+        useGlobalContext();
     ({ user: userState.user, chat: chatState.user });
 
     return (
-        <div className="grid grid-cols-[0.1fr,1fr,auto] gap-x-[1vw] items-center">
+        <div
+            className={`grid items-center pb-[1vh] ${
+                isSmallScreen
+                    ? "gap-[3vw] grid-cols-[0.2fr,1fr,auto]"
+                    : "gap-x-[1vw] grid-cols-[0.1fr,1fr,auto]"
+            } `}
+        >
             <figure className="relative aspect-square rounded-full overflow-hidden">
                 <Image
                     src={

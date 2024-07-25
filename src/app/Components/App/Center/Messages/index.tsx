@@ -8,32 +8,62 @@ import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { ImBlocked } from "react-icons/im";
 import "./index.css";
+import { AnimatePresence, motion } from "framer-motion";
 
-type ChatType = {
-    createdAt: Timestamp;
-    messages: MessageStateType[];
+type ChatTime = {
+    chatStartDate: string;
+    chatStartClock: string;
+};
+
+type ImageToSightState = {
+    isInSight: boolean;
+    image: string;
 };
 
 function Messages() {
-    const { chatState, userState, isBlocked } = useGlobalContext();
-    const [chat, setChat] = useState<ChatType>({} as ChatType);
+    const { chatState, userState, isBlocked, isSmallScreen, imageState, chat } =
+        useGlobalContext();
+    const [chatStartTime, setChatStartTime] = useState<ChatTime>(
+        {} as ChatTime,
+    );
+
+    const [imageToSight, setImageToSight] = useState<ImageToSightState>({
+        isInSight: false,
+        image: "",
+    });
 
     useEffect(() => {
-        if (chatState.chatId) {
-            const unSub = onSnapshot(
-                doc(db, "chats", chatState.chatId),
-                (res) => {
-                    const chatData = res.data() as ChatType | undefined;
-
-                    if (chatData) {
-                        setChat(chatData);
-                    }
-                },
-            );
-
-            return () => unSub();
+        if (chat.createdAt) {
+            setChatStartTime({
+                chatStartDate: chat.createdAt
+                    .toString()
+                    .split("T")[0]
+                    .split("-")
+                    .reduce(
+                        (date, item, ind) => {
+                            if (ind === 0) {
+                                date[2] = item;
+                            } else if (ind === 2) {
+                                date[0] = item;
+                            } else {
+                                date[1] = item;
+                            }
+                            return date;
+                        },
+                        ["", "", ""] as string[],
+                    )
+                    .join("-"),
+                chatStartClock: chat.createdAt
+                    .toString()
+                    .split("T")[1]
+                    .split(":")
+                    .filter((item, ind) =>
+                        ind === 0 || ind === 1 ? item : null,
+                    )
+                    .join(":"),
+            });
         }
-    }, [chatState.chatId]);
+    }, [chat]);
 
     const Div = useRef<HTMLDivElement | null>(null);
     const [divHeight, setDivHeight] = useState<number>(0);
@@ -63,9 +93,16 @@ function Messages() {
     return (
         <div ref={Div} className=" max-h-full">
             <ul
-                className="scroll-transparent space-y-[2vh] border-y border-base-content overflow-y-auto py-[1vh]"
+                className="relative scroll-transparent space-y-[2vh] border-y border-base-content overflow-y-auto py-[1vh]"
                 style={{ height: divHeight }}
             >
+                <div className="text-center flex justify-center ">
+                    <p className="shadow-md shadow-base-content rounded-lg border-t border-base-content text-primary px-[2vw]">
+                        Chat started at {chatStartTime.chatStartDate},{" "}
+                        {chatStartTime.chatStartClock}
+                    </p>
+                </div>
+
                 {chat?.messages?.map((message, ind) => {
                     const isMsgMine =
                         message.senderId === userState.user.userId
@@ -120,6 +157,12 @@ function Messages() {
                                                 : "justify-self-start "
                                         }
                                     `}
+                                        onClick={(e) => {
+                                            setImageToSight({
+                                                isInSight: true,
+                                                image: message.image,
+                                            });
+                                        }}
                                     >
                                         <Image
                                             src={message.image}
@@ -140,12 +183,52 @@ function Messages() {
                                                 {msgTime.slice(0, 5)}
                                             </span>
                                         )}
+                                        <AnimatePresence>
+                                            {imageToSight.isInSight &&
+                                                imageToSight.image ===
+                                                    message.image && (
+                                                    <div
+                                                        className="bg-primary/50 fixed top-0 left-0 w-full h-full z-50"
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            setImageToSight({
+                                                                image: "",
+                                                                isInSight:
+                                                                    false,
+                                                            });
+                                                        }}
+                                                    >
+                                                        <motion.figure
+                                                            className={`fixed ${
+                                                                isSmallScreen
+                                                                    ? "w-3/4"
+                                                                    : "w-1/4"
+                                                            } aspect-square overflow-hidden left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2`}
+                                                            onClick={(e) =>
+                                                                e.stopPropagation()
+                                                            }
+                                                        >
+                                                            <Image
+                                                                src={
+                                                                    imageToSight.image
+                                                                }
+                                                                fill
+                                                                alt="image"
+                                                            />
+                                                        </motion.figure>
+                                                    </div>
+                                                )}
+                                        </AnimatePresence>
                                     </figure>
                                 )}
                                 {message.message && (
                                     <p
-                                        className={`bubble w-3/4 rounded-b-lg py-[1vh] px-[1vw] 
-                                            grid
+                                        className={`bubble w-3/4 rounded-b-lg py-[1vh] grid
+                                            ${
+                                                isSmallScreen
+                                                    ? " px-[2vw]"
+                                                    : " px-[1vw]"
+                                            }
                                         ${
                                             isMsgMine
                                                 ? "bubble-right text-accent-content bg-accent justify-self-end  "
@@ -162,6 +245,15 @@ function Messages() {
                         </li>
                     );
                 })}
+                {isSmallScreen && imageState.imageUrl && (
+                    <figure className="sticky bottom-2 left-full animate-pulse w-1/2 aspect-square ">
+                        <Image
+                            src={imageState.imageUrl}
+                            fill
+                            alt={"image preview"}
+                        />
+                    </figure>
+                )}
             </ul>
         </div>
     );

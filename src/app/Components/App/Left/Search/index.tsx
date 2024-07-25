@@ -32,7 +32,10 @@ function Search() {
             const usersRef = collection(db, "users");
 
             // Create a query against the collection.
-            const q = query(usersRef, where("username", "==", username));
+            const q = query(
+                usersRef,
+                where("username".toLowerCase(), "==", username),
+            );
             const querySnapshot = await getDocs(q);
 
             if (!querySnapshot.empty) {
@@ -58,7 +61,7 @@ function Search() {
             const newChatRef = doc(chatRef);
 
             await setDoc(newChatRef, {
-                createdAt: serverTimestamp(),
+                createdAt: new Date().toISOString(),
                 messages: [],
             });
 
@@ -136,7 +139,9 @@ function Search() {
                                 id="search"
                                 placeholder="Search User ..."
                                 className="input input-sm bg-[rgba(255,255,255,0.3)] join-item grow"
-                                onChange={(e) => setUsername(e.target.value)}
+                                onChange={(e) =>
+                                    setUsername(e.target.value.toLowerCase())
+                                }
                             />
                             <SearchButton />
                         </form>
